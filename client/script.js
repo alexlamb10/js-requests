@@ -10,6 +10,7 @@
 */
 
 // CODE HERE
+const sayHelloButton = document.querySelector('#say-hello-button')
 
 
 // PROBLEM 2
@@ -20,7 +21,12 @@
 */
 
 // CODE HERE
+function changeSayHelloBtn() {
+    sayHelloButton.style.backgroundColor= `black`;
+    sayHelloButton.style.color = 'white';
+}
 
+sayHelloButton.addEventListener('mouseover', changeSayHelloBtn)
 
 // PROBLEM 3
 /*
@@ -32,7 +38,12 @@
 */
 
 // CODE HERE
+function changeColors(){
+    sayHelloButton.style.backgroundColor = '#EFEFEF'
+    sayHelloButton.style.color = 'black'
+}
 
+sayHelloButton.addEventListener('mouseout', changeColors);
 
 // PROBLEM 4
 /*
@@ -53,7 +64,7 @@ const sayHello = () => {
 // DO NOT EDIT FUNCTION
 
 // CODE HERE
-
+sayHelloButton.addEventListener('click', sayHello);
 
 // PROBLEM 5 
 /*
@@ -68,6 +79,15 @@ const sayHello = () => {
 
 const ohMy = () => {
     // YOUR CODE HERE
+    axios.get(`http://localhost:3000/animals`)
+        .then(function(res){
+            for(let i = 0; i < res.data.length; i++){
+                let newP = document.createElement('p')
+                newP.textContent = res.data[i]
+
+                document.querySelector('body').appendChild(newP)
+            }
+        })
 }
 
 document.getElementById('animals-button').addEventListener('click', ohMy)
@@ -88,7 +108,16 @@ document.getElementById('animals-button').addEventListener('click', ohMy)
 
 const repeatMyParam = () => {
     //YOUR CODE HERE
+    axios.get(`http://localhost:3000/repeat/food`)
+        .then(function(res){
+            console.log(res.data);
+            let repeat = document.querySelector('#repeat-text');
+            repeat.textContent = res.data;
+            repeat.style.display = 'block';
+        })
 }
+
+document.getElementById('repeat-button').addEventListener('click', repeatMyParam)
 
 // PROBLEM 7
 /*
@@ -111,9 +140,14 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE
+function queryRequest(){
+    axios.get(`http://localhost:3000/query-test/?name=alex`)
+        .then(function(res){
+            console.log(res.data)
+        })
+}
 
-
-
+document.querySelector('#query-button').addEventListener('click', queryRequest)
 ////////////////
 //INTERMEDIATE//
 ////////////////
@@ -132,8 +166,9 @@ const repeatMyParam = () => {
     In the function that you wrote for Problem 8, change the URL to test a couple different scenarios. 
 
     1: Send no queries on the URL -- what happened? 
-
+        Comes backs saying I sent an empty query
     2: Send more than 1 query on the URL -- what happened? 
+        It just makes the value longer, but does not allow me to send 2 queries at the same time.
 */
 
 // Edit code in Problem 8
@@ -164,3 +199,25 @@ const repeatMyParam = () => {
 */
 
 // CODE HERE 
+let foodInput = document.querySelector('input')
+let foodSubmit = document.querySelector('form')
+
+function createFood(event) {
+    event.preventDefault()
+
+    let body = {
+        newFood: foodInput.value
+    }
+    axios.post(`http://localhost:3000/food`, body)
+        .then(function(res){
+            console.log(res.data)
+
+            let newFood = document.createElement('p')
+                newFood.textContent = res.data
+
+                document.querySelector('body').appendChild(newFood)
+        })
+        foodInput.value = ''
+}
+
+foodSubmit.addEventListener('submit', createFood)
